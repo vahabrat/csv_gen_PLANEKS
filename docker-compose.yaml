@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  web:
+    build: ./csv_generator
+    command: python /code/csv_generator/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    #volumes:
+    #  - postgres_data:/var/lib/postgresql/data/
+    restart: always
+    environment:
+      - POSTGRES_DATABASE=csv_generator
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=wrestler1995GR
+    ports:
+      - "5401:5432"
+    expose:
+      - "5401"
+volumes:
+  postgres_data:
