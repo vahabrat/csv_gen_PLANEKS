@@ -1,0 +1,27 @@
+{% extends "csv_gen/index.html" %}
+{% block content %}
+    <form method = 'post'>
+        {% csrf_token %}
+        <input type="number" name="number_of_rows">
+        <button type="submit">Generate</button>
+    </form>
+    {% if sets %}
+        <ul>
+            {% for item in sets %}
+                <li>
+                    <h1>{{ item.creation_date }}</h1>
+                    <a href ="{{ item.csv_file }}" download ="{{ item.csv_file }}">Download</a>
+                    {% if item.is_ready == False %}
+                        <div>Processing</div>
+                    {% else %}
+                        <p>Ready!</p>
+                    {% endif %}
+                    <div><a href ="{% url 'csv:delete_data_set' item.id  %}">Delete</a></div>
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No datasets yet!</p>
+    {% endif %}
+{% endblock %}

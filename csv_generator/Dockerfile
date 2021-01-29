@@ -5,8 +5,10 @@ FROM python:3.8
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 # Создаем папку(рабочий каталог)
+
 RUN mkdir /code
-# Настраиваем рабочий каталог
+# Настраиваем и переходим в рабочий каталог
+# WORKDIR sets the working directory for all the command after it is defined in the Dockerfile, which means the command which you are try to run will run from that directory.
 WORKDIR /code
 # Устанавливаем зависимости
 ADD requirements.txt /code/

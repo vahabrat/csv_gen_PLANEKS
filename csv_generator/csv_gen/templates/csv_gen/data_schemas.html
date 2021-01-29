@@ -1,0 +1,20 @@
+{% extends "csv_gen/index.html" %}
+{% block content %}
+    {% if schemas %}
+        <ul>
+            {% for item in schemas %}
+                <li>
+                    <h1>{{ item.schema_name }}</h1>
+                    <div>{{ item.date_creation }}</div>
+
+                    <a href ="{% url 'csv:edit_schema' item.id %}" >Edit schema</a>
+                    <a href ="{% url 'csv:create_data_sets' item.id %}" >Create Dataset</a>
+                    <input type="button" value="Delete">
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No sets yet!</p>
+    {% endif %}
+{% endblock %}
