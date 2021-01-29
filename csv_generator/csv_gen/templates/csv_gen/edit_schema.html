@@ -1,0 +1,109 @@
+{% extends "csv_gen/index.html" %}
+{% block content %}
+    {% if schema %}
+        <div class="schema_detail_container">
+            <div class="name_container schema_item">
+                <label>Name</label>
+                <input type="text" name="schema_name" value="{{ schema.schema_name }}">
+            </div>
+            <div class="type_container schema_item">
+                <label>Column separator</label>
+                <select name="delimiter" onChange="select(this)" value="{{schema.schema_delimiter}}">
+                    {% for delimiter in schema.schema_delimiter %}
+                        {% if schema.schema_delimiter == ','%}
+                            <option value="{{ schema.schema_delimiter }}" selected="selected">{{ schema.schema_delimiter }}</option>
+                            <option value="%">Percentage(%)</option>
+                            <option value="/">Slash(/)</option>
+                            <option value="!">Exclamation mark(!)</option>
+                        {% elif schema.schema_delimiter == '%' %}
+                            <option value=",">Comma(,)</option>
+                            <option value="{{ schema.schema_delimiter }}" selected="selected">{{ schema.schema_delimiter }}</option>
+                            <option value="/">Slash(/)</option>
+                            <option value="!">Exclamation mark(!)</option>
+                        {% elif schema.schema_delimiter == '/' %}
+                            <option value=",">Comma(,)</option>
+                            <option value="%">Percentage(%)</option>
+                            <option value="{{ schema.schema_delimiter }}" selected="selected">{{ schema.schema_delimiter }}</option>
+                            <option value="!">Exclamation mark(!)</option>
+                        {% elif schema.schema_delimiter == '!' %}
+                            <option value=",">Comma(,)</option>
+                            <option value="%">Percentage(%)</option>
+                            <option value="/">Slash(/)</option>
+                            <option value="{{ schema.schema_delimiter }}" selected="selected">{{ schema.schema_delimiter }}</option>
+                        {% else %}
+                            <option value=",">Comma(,)</option>
+                            <option value="%">Percentage(%)</option>
+                            <option value="/">Slash(/)</option>
+                            <option value="!">Exclamation mark(!)</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="type_container schema_item">
+                <label>String character</label>
+                <select name="string_character" onChange="select(this)" value="{{ schema.schema_string_character }}">
+                    {% for character in schema.schema_string_character %}
+                        {% if schema.schema_string_character == '"'%}
+                            <option value="{{ schema.schema_string_character }}" selected="selected">{{ schema.schema_string_character }}</option>
+                            <option value="@">Сommercial at(@)</option>
+                            <option value="&">Ampersand($)</option>
+                        {% elif schema.schema_string_character == '@' %}
+                            <option value='"'>Double-quote(")</option>
+                            <option value="{{ schema.schema_string_character }}" selected="selected">{{ schema.schema_string_character }}</option>
+                            <option value="&">Ampersand($)</option>
+                        {% elif schema.schema_string_character == '&' %}
+                            <option value='"'>Double-quote(")</option>
+                            <option value="@">Сommercial at(@)</option>
+                            <option value="{{ schema.schema_string_character }}" selected="selected">{{ schema.schema_string_character }}</option>
+                        {% else %}
+                            <option value='"'>Double-quote(")</option>
+                            <option value="@">Сommercial at(@)</option>
+                            <option value="&">Ampersand($)</option>
+                        {% endif %}
+                    {% endfor %}
+
+                </select>
+            </div>
+        </div>
+    {% endif %}
+    {% if columns %}
+        <ul>
+            {% for column in columns %}
+            <li>
+                <div class="schema_column_container" style="border:1px solid black">
+                    <div class="column_name_container column_item">
+                        <label>Column name</label>
+                        <input type="text" name="column_name" value="{{ column.column_name }}">
+                    </div>
+                    <div class="type_container column_item">
+                        <select name="type" onChange="select(this)">
+                            {% for x, y in column_form.fields.column_type.choices %}
+                                <option value="{{ x }}"{% if column.column_type == x %} selected {% endif %}>{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {% if column.column_type == 'integer'%}
+                        <div class="type_option hidden_edit">
+                            <input class="type_option_from type_item" type="number" value="{{column.column_type_option_from}}" name="option_from">
+                            <input class="type_option_to type_item" type="number" value="{{column.column_type_option_to}}" name="option_to">
+                        </div>
+                    {% endif %}
+
+                    <div class="type_option hidden">
+                        <input class="type_option_from type_item" type="number" value="{{column.column_type_option_from}}" name="option_from">
+                        <input class="type_option_to type_item" type="number" value="{{column.column_type_option_to}}" name="option_to">
+                    </div>
+
+                    <div class="order_container column_item">
+                        <label>Order</label>
+                        <input type="number" name="order" value="{{ column.column_order }}">
+                    </div>
+                    <button onClick="remove()">Remove column</button>
+                    <input type="hidden" name="column_numbers[]" />
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

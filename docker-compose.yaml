@@ -8,8 +8,33 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    environment:
+      - DEBUG=1
+
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
     depends_on:
       - db
+
+  celery:
+    restart: always
+    build: ./csv_generator
+    container_name: celery_1
+    volumes:
+      - .:/code
+    #command: " cd /csv_generator && celery worker -A csv_generator -l INFO"
+    #command: celery worker --app=csv_gen.tasks
+    #command: celery worker --app=csv_gen.tasks
+    #command: 'celery -A csv_generator worker'
+    command: bash -c "cd /code/csv_generator && celery -A csv_generator worker -l info"
+    environment:
+      - DEBUG=1
+    links:
+      - redis
+    depends_on:
+      - web
+      - redis
+
   db:
     image: postgres
     #volumes:
@@ -23,5 +48,16 @@ services:
       - "5401:5432"
     expose:
       - "5401"
+
+  redis:
+    image: redis
+    restart: always
+    #ports:
+    #  - "6379:6379"
+    #expose:
+    #  - 6379
+
+
+
 volumes:
   postgres_data:
