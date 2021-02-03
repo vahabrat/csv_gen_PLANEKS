@@ -4,12 +4,14 @@ import uuid
 from celery import shared_task
 import csv
 from .models import DataSet, Schema, Column, FakeDate, FakeIpAddress, FakeCompanyName, FakePhoneNumber
+from csv_generator.celery import app
 
 
-@shared_task
-def generate_csv(row_number,schema_id, set_id):
+
+@app.task
+def generate_csv(row_number, schema_id, set_id):
     unique_filename = str(uuid.uuid4())
-    print(unique_filename)
+
     columns = Column.objects.filter(schema=schema_id,).order_by('column_order')
     schema = Schema.objects.get(id = schema_id)
     write = []
@@ -35,8 +37,7 @@ def generate_csv(row_number,schema_id, set_id):
                 random_date = random.choice(FakeDate.objects.all())
                 row.append(random_date.fake_date)
         write.append(row)
-        print(write)
-        print(row_number)
+
     with open(f'/code/csv_generator/media/csvs/{unique_filename}.csv', 'wt', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=f'{schema.schema_delimiter}', quotechar=f'{schema.schema_string_character}')
 

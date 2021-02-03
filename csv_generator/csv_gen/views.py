@@ -70,16 +70,18 @@ def new_schema(request):
 def create_data_sets(request,schema_id):
     context={}
     sets=DataSet.objects.filter(schema=schema_id)
+    #sets=list(DataSet.objects.filter(schema=schema_id))
+    sets_for_today = sets.filter()  #filter  for today
+    sets_fort_omorrow = sets.filter()
     context['sets'] = sets
-
-
 
     if request.method == 'POST':
         row_number = int(request.POST['number_of_rows'])
         print(row_number)
         set=DataSet.objects.create(schema_id=schema_id)
 
-        generate_csv(row_number,schema_id, set.id)
+        result = generate_csv.delay(row_number, schema_id, set.id)
+        result.ready()
     return render(request,'csv_gen/data_sets.html', context)
 
 def delete_data_set(request, set_id):

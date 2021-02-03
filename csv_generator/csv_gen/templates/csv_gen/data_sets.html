@@ -11,6 +11,7 @@
                 <li>
                     <h1>{{ item.creation_date }}</h1>
                     <a href ="{{ item.csv_file }}" download ="{{ item.csv_file }}">Download</a>
+                    {{item.is_celery_task_ready}}
                     {% if item.is_ready == False %}
                         <div>Processing</div>
                     {% else %}

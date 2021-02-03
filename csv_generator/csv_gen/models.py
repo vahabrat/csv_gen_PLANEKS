@@ -64,7 +64,14 @@ class DataSet(models.Model):
     creation_date=models.DateTimeField('Дата создания сэта', auto_now_add=True)
     csv_file=models.FileField(upload_to='csvs/',blank=True)
     is_ready=models.BooleanField(default=False)
+    #celery_task_id = models.CharField....
     schema=models.ForeignKey(Schema, on_delete=models.CASCADE,related_name='sets')
+
+
+    #def is_celery_task_ready(self):
+    #    from celery.result import AsyncResult
+    #    res = AsyncResult(self.celery_task_id)
+    #    return res.ready()
 
 
 class FakePhoneNumber(models.Model):
